@@ -1,0 +1,68 @@
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "TimerGui"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local frameTimer = Instance.new("Frame")
+frameTimer.Size = UDim2.new(0, 160, 0, 28)
+frameTimer.Position = UDim2.new(0, 8, 1, -36)
+frameTimer.BackgroundColor3 = Color3.new(0, 0, 0)
+frameTimer.BackgroundTransparency = 0.45
+frameTimer.BorderSizePixel = 0
+frameTimer.Parent = screenGui
+
+local cornerTimer = Instance.new("UICorner")
+cornerTimer.CornerRadius = UDim.new(0, 6)
+cornerTimer.Parent = frameTimer
+
+local labelTimer = Instance.new("TextLabel")
+labelTimer.Size = UDim2.new(1, -8, 1, 0)
+labelTimer.Position = UDim2.new(0, 4, 0, 0)
+labelTimer.BackgroundTransparency = 1
+labelTimer.TextColor3 = Color3.new(1, 1, 1)
+labelTimer.TextSize = 13
+labelTimer.Font = Enum.Font.GothamSemibold
+labelTimer.TextXAlignment = Enum.TextXAlignment.Left
+labelTimer.Text = "-- sec until --"
+labelTimer.Parent = frameTimer
+
+local frameDist = Instance.new("Frame")
+frameDist.Size = UDim2.new(0, 160, 0, 28)
+frameDist.Position = UDim2.new(0, 8, 1, -68)
+frameDist.BackgroundColor3 = Color3.new(0, 0, 0)
+frameDist.BackgroundTransparency = 0.45
+frameDist.BorderSizePixel = 0
+frameDist.Parent = screenGui
+
+local cornerDist = Instance.new("UICorner")
+cornerDist.CornerRadius = UDim.new(0, 6)
+cornerDist.Parent = frameDist
+
+local labelDist = Instance.new("TextLabel")
+labelDist.Size = UDim2.new(1, -8, 1, 0)
+labelDist.Position = UDim2.new(0, 4, 0, 0)
+labelDist.BackgroundTransparency = 1
+labelDist.TextColor3 = Color3.new(1, 1, 1)
+labelDist.TextSize = 13
+labelDist.Font = Enum.Font.GothamSemibold
+labelDist.TextXAlignment = Enum.TextXAlignment.Left
+labelDist.Text = "Ayuwoki: -- studs"
+labelDist.Parent = frameDist
+
+game.ReplicatedStorage.Values.Timer:GetPropertyChangedSignal("Value"):Connect(function()
+    if game.ReplicatedStorage.Values.Day.Value == true then
+        labelTimer.Text = game.ReplicatedStorage.Values.Timer.Value .. " sec until night"
+    else
+        labelTimer.Text = game.ReplicatedStorage.Values.Timer.Value .. " sec until day"
+    end
+end)
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    local ayuwoki = game.Workspace:FindFirstChild("Ayuwoki")
+    if ayuwoki and game.Players.LocalPlayer.Character then
+        local dist = (ayuwoki:GetBoundingBox().Position - game.Players.LocalPlayer.Character:GetBoundingBox().Position).Magnitude
+        labelDist.Text = "Ayuwoki: " .. math.round(dist) .. " studs"
+    else
+        labelDist.Text = "Ayuwoki: gone"
+    end
+end)
